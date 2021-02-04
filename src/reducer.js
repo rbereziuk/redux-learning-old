@@ -5,7 +5,7 @@ let lastId = 0
 
 // Reducer => pure function
 // When the app runs redux calls reducer for setup the store
-function reducer(state = [], action) {
+export default function reducer(state = [], action) {
   switch (action.type) {
     case 'taskAdded':
       return [
