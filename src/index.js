@@ -1,4 +1,12 @@
 import store from './store'
+import * as actions from './actionTypes'
+
+const unsubscribe = store.subscribe(() => {
+  console.log('🧪 Store changed!', store.getState())
+})
+
+// state = reducer(state, action)
+// notify the subscribers
 
 store.dispatch({
   type: 'taskAdded',
@@ -8,17 +16,15 @@ store.dispatch({
 })
 
 store.dispatch({
-  type: 'taskAdded',
+  type: actions.TASK_ADDED,
   payload: {
     description: 'Make dinner',
   },
 })
 
 store.dispatch({
-  type: 'taskRemoved',
+  type: actions.TASK_REMOVED,
   payload: {
     id: 1,
   },
 })
-
-console.log(store.getState())

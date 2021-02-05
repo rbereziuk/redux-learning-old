@@ -1,3 +1,4 @@
+import * as actions from './actionTypes'
 // Initial state => []
 
 // Temporary placeholder for id
@@ -7,7 +8,7 @@ let lastId = 0
 // When the app runs redux calls reducer for setup the store
 export default function reducer(state = [], action) {
   switch (action.type) {
-    case 'taskAdded':
+    case actions.TASK_ADDED:
       return [
         ...state,
         {
@@ -16,7 +17,7 @@ export default function reducer(state = [], action) {
           complete: false,
         },
       ]
-    case 'taskRemoved':
+    case actions.TASK_REMOVED:
       return state.filter(task => task.id !== action.payload.id)
     default:
       return state
