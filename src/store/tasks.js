@@ -1,29 +1,8 @@
-// Action types
-const TASK_ADDED = 'taskAdded'
-const TASK_REMOVED = 'taskRemoved'
-const TASK_COMPLETED = 'taskCompleted'
+import { createAction } from '@reduxjs/toolkit'
 
-// Action
-export const taskAdded = description => ({
-  type: TASK_ADDED,
-  payload: {
-    description,
-  },
-})
-
-export const taskRemoved = id => ({
-  type: TASK_REMOVED,
-  payload: {
-    id,
-  },
-})
-
-export const taskCompleted = id => ({
-  type: TASK_COMPLETED,
-  payload: {
-    id,
-  },
-})
+export const taskAdded = createAction('taskAdded')
+export const taskRemoved = createAction('taskRemoved')
+export const taskCompleted = createAction('taskCompleted')
 
 // Reducer
 // Initial state => []
@@ -35,7 +14,7 @@ let lastId = 0
 // When the app runs redux calls reducer for setup the store
 export default function reducer(state = [], action) {
   switch (action.type) {
-    case TASK_ADDED:
+    case taskAdded.type:
       return [
         ...state,
         {
@@ -45,10 +24,10 @@ export default function reducer(state = [], action) {
         },
       ]
 
-    case TASK_REMOVED:
+    case taskRemoved.type:
       return state.filter(task => task.id !== action.payload.id)
 
-    case TASK_COMPLETED:
+    case taskCompleted.type:
       return state.map(task =>
         task.id === action.payload.id ? { ...task, complete: true } : task
       )
