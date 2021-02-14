@@ -24,7 +24,6 @@ const slice = createSlice({
       tasks[index].completed = true
     },
     taskRemoved: (tasks, action) => {
-      console.log('removed')
       return tasks.filter(task => task.id !== action.payload.id)
     },
   },
