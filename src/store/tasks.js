@@ -31,3 +31,6 @@ const slice = createSlice({
 
 export const { taskAdded, taskCompleted, taskRemoved } = slice.actions
 export default slice.reducer
+
+export const getUncompletedTasks = state =>
+  state.entities.tasks.filter(task => !task.completed)
