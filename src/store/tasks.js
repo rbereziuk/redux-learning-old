@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { createSelector } from 'reselect'
 
 // Temporary placeholder for id
 let lastId = 0
@@ -41,8 +42,16 @@ export const {
 } = slice.actions
 export default slice.reducer
 
-export const getUncompletedTasks = state =>
-  state.entities.tasks.filter(task => !task.completed)
+// Memoization
+// Create cache from inputs and outputs
+// If input don't change return previous output
+export const getUncompletedTasks = createSelector(
+  state => state.entities.tasks,
+  tasks => tasks.filter(task => !task.completed)
+)
 
-export const getTasksByProject = state => projectId =>
-  state.entities.tasks.filter(task => task.projectId === projectId)
+export const getTasksByProject = projectId =>
+  createSelector(
+    state => state.entities.tasks,
+    tasks => tasks.filter(task => task.projectId === projectId)
+  )

@@ -5,17 +5,19 @@ import {
   taskRemoved,
   taskAssignedToProject,
   getUncompletedTasks,
+  getTasksByProject,
 } from './store/tasks'
 import { projectAdded } from './store/projects'
 
 const store = configureStore()
 
-store.dispatch(taskAdded({ description: 'Clean the room' }))
+store.dispatch(projectAdded({ name: 'My every day tasks' }))
+
+store.dispatch(taskAdded({ description: 'Make my bed' }))
+store.dispatch(taskAdded({ description: 'Clean my teeth' }))
 store.dispatch(taskCompleted({ id: 1 }))
 store.dispatch(taskAdded({ description: 'Make a breakfast' }))
 store.dispatch(taskRemoved({ id: 1 }))
-
-store.dispatch(projectAdded({ name: 'My cool project' }))
 
 store.dispatch(
   taskAssignedToProject({
@@ -25,4 +27,7 @@ store.dispatch(
 )
 
 const uncompletedTasks = getUncompletedTasks(store.getState())
-console.log(uncompletedTasks)
+console.log('Uncompleted tasks', uncompletedTasks)
+
+const tasksByProject = getTasksByProject(1)(store.getState())
+console.log('Tasks by project', tasksByProject)
