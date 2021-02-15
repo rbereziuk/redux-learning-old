@@ -26,11 +26,23 @@ const slice = createSlice({
     taskRemoved: (tasks, action) => {
       return tasks.filter(task => task.id !== action.payload.id)
     },
+    taskAssignedToProject: (tasks, action) => {
+      const index = tasks.findIndex(task => task.id === action.payload.taskId)
+      tasks[index].projectId = action.payload.projectId
+    },
   },
 })
 
-export const { taskAdded, taskCompleted, taskRemoved } = slice.actions
+export const {
+  taskAdded,
+  taskCompleted,
+  taskRemoved,
+  taskAssignedToProject,
+} = slice.actions
 export default slice.reducer
 
 export const getUncompletedTasks = state =>
   state.entities.tasks.filter(task => !task.completed)
+
+export const getTasksByProject = state => projectId =>
+  state.entities.tasks.filter(task => task.projectId === projectId)
