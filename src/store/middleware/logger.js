@@ -1,5 +1,4 @@
-export const logger = store => next => action => {
-  console.log({ store, next, action })
-  console.log('Logger')
+export const logger = param => store => next => action => {
+  console.log(param)
   next(action)
 }
