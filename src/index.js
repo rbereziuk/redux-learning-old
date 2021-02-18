@@ -7,3 +7,8 @@ store.dispatch((dispatch, getState) => {
 
   dispatch({ type: 'tasksReceived', payload: [1, 2, 3] })
 })
+
+store.dispatch({
+  type: 'error',
+  payload: { message: 'An error occurred' },
+})
