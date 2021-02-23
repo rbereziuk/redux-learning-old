@@ -6,6 +6,6 @@ const store = configureStore()
 store.dispatch(
   actions.apiRequest({
     url: '/tasks',
-    onSuccess: 'tasksReceived',
+    onSuccess: 'tasks/tasksReceived',
   })
 )
