@@ -1,11 +1,6 @@
 import configureStore from './store/configureStore'
-import * as actions from './store/api'
+import { loadTasks } from './store/tasks'
 
 const store = configureStore()
 
-store.dispatch(
-  actions.apiRequest({
-    url: '/tasks',
-    onSuccess: 'tasks/tasksReceived',
-  })
-)
+store.dispatch(loadTasks())

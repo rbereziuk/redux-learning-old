@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { createSelector } from 'reselect'
+import { apiRequest } from './api'
 
 // Temporary placeholder for id
 let lastId = 0
@@ -43,11 +44,21 @@ const slice = createSlice({
   },
 })
 
+// Acion creators
+const url = '/tasks'
+
+export const loadTasks = () =>
+  apiRequest({
+    url,
+    onSuccess: tasksReceived.type,
+  })
+
 export const {
   taskAdded,
   taskCompleted,
   taskRemoved,
   taskAssignedToProject,
+  tasksReceived,
 } = slice.actions
 export default slice.reducer
 
