@@ -25,8 +25,15 @@ const slice = createSlice({
         completed: false,
       })
     },
+    tasksLoading: tasks => {
+      tasks.isLoading = true
+    },
+    tasksLoadingFailed: tasks => {
+      tasks.isLoading = false
+    },
     tasksReceived: (tasks, action) => {
       tasks.list = action.payload
+      tasks.isLoading = false
     },
     taskCompleted: (tasks, action) => {
       const index = tasks.list.findIndex(task => task.id === action.payload.id)
@@ -44,13 +51,15 @@ const slice = createSlice({
   },
 })
 
-// Acion creators
+// Action creators
 const url = '/tasks'
 
 export const loadTasks = () =>
   apiRequest({
     url,
+    onStart: tasksLoading.type,
     onSuccess: tasksReceived.type,
+    onError: tasksLoadingFailed.type,
   })
 
 export const {
@@ -58,6 +67,8 @@ export const {
   taskCompleted,
   taskRemoved,
   taskAssignedToProject,
+  tasksLoading,
+  tasksLoadingFailed,
   tasksReceived,
 } = slice.actions
 export default slice.reducer

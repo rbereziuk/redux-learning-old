@@ -6,9 +6,10 @@ export const api = ({ dispatch }) => next => async action => {
     return next(action)
   }
 
-  next(action)
+  const { url, method, onStart, onSuccess, onError } = action.payload
 
-  const { url, method, onSuccess, onError } = action.payload
+  if (onStart) dispatch({ type: onStart })
+  next(action)
 
   try {
     const response = await axios.request({
@@ -25,12 +26,12 @@ export const api = ({ dispatch }) => next => async action => {
       })
   } catch (error) {
     // General error
-    dispatch(actions.apiRequestFailed(error))
+    dispatch(actions.apiRequestFailed(error.message))
     // Specific error
     if (onError)
       dispatch({
         type: onError,
-        payload: error,
+        payload: error.message,
       })
   }
 }
