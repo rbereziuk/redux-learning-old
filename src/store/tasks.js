@@ -1,6 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { createSelector } from 'reselect'
 import { apiRequest } from './api'
+import dayjs from 'dayjs'
+
+window.dayjs = dayjs
 
 // Temporary placeholder for id
 let lastId = 0
@@ -34,6 +37,7 @@ const slice = createSlice({
     tasksReceived: (tasks, action) => {
       tasks.list = action.payload
       tasks.isLoading = false
+      tasks.lastFetch = Date.now()
     },
     taskCompleted: (tasks, action) => {
       const index = tasks.list.findIndex(task => task.id === action.payload.id)
@@ -54,13 +58,22 @@ const slice = createSlice({
 // Action creators
 const url = '/tasks'
 
-export const loadTasks = () =>
-  apiRequest({
-    url,
-    onStart: tasksLoading.type,
-    onSuccess: tasksReceived.type,
-    onError: tasksLoadingFailed.type,
-  })
+export const loadTasks = () => (dispatch, getState) => {
+  const { lastFetch } = getState().entities.tasks
+
+  const diff = dayjs().diff(dayjs(lastFetch), 'minutes')
+
+  if (diff < 1) return
+
+  dispatch(
+    apiRequest({
+      url,
+      onStart: tasksLoading.type,
+      onSuccess: tasksReceived.type,
+      onError: tasksLoadingFailed.type,
+    })
+  )
+}
 
 export const {
   taskAdded,
