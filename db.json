@@ -1,12 +1,18 @@
 {
   "tasks": [
-    { 
-      "id": 1, 
-      "title": "Clean the room"
+    {
+      "id": 1,
+      "description": "Clean the room",
+      "completed": false
     },
     {
       "id": 2,
-      "title": "Make the dinner"
+      "description": "Make the dinner",
+      "completed": false
+    },
+    {
+      "id": 13,
+      "discription": "Read the book"
     }
   ]
 }

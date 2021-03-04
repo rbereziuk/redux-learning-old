@@ -5,9 +5,6 @@ import dayjs from 'dayjs'
 
 window.dayjs = dayjs
 
-// Temporary placeholder for id
-let lastId = 0
-
 // Reducer => pure function
 // When the app runs redux calls reducer for setup the store
 
@@ -22,11 +19,7 @@ const slice = createSlice({
   reducers: {
     // actions: functions     (event => event handler)
     taskAdded: (tasks, action) => {
-      tasks.list.push({
-        id: ++lastId,
-        description: action.payload.description,
-        completed: false,
-      })
+      tasks.list.push(action.payload)
     },
     tasksLoading: tasks => {
       tasks.isLoading = true
@@ -57,6 +50,14 @@ const slice = createSlice({
 
 // Action creators
 const url = '/tasks'
+
+export const addTask = task =>
+  apiRequest({
+    url,
+    method: 'post',
+    data: task,
+    onSuccess: taskAdded.type,
+  })
 
 export const loadTasks = () => (dispatch, getState) => {
   const { lastFetch } = getState().entities.tasks

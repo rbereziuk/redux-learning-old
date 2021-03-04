@@ -6,7 +6,7 @@ export const api = ({ dispatch }) => next => async action => {
     return next(action)
   }
 
-  const { url, method, onStart, onSuccess, onError } = action.payload
+  const { url, method, onStart, onSuccess, onError, data } = action.payload
 
   if (onStart) dispatch({ type: onStart })
   next(action)
@@ -16,6 +16,7 @@ export const api = ({ dispatch }) => next => async action => {
       baseURL: 'http://localhost:3000',
       url, // url of endpoint
       method,
+      data,
     })
 
     dispatch(actions.apiRequestSuccess(response.data))
