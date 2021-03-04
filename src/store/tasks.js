@@ -3,8 +3,6 @@ import { createSelector } from 'reselect'
 import { apiRequest } from './api'
 import dayjs from 'dayjs'
 
-window.dayjs = dayjs
-
 // Reducer => pure function
 // When the app runs redux calls reducer for setup the store
 
@@ -75,6 +73,14 @@ export const loadTasks = () => (dispatch, getState) => {
     })
   )
 }
+
+export const completeTask = id =>
+  apiRequest({
+    url: url + '/' + id,
+    method: 'patch',
+    date: { completed: true },
+    onSuccess: taskCompleted.type,
+  })
 
 export const {
   taskAdded,
