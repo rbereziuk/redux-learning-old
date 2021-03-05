@@ -38,10 +38,9 @@ const slice = createSlice({
       return tasks.list.filter(task => task.id !== action.payload.id)
     },
     taskAssignedToProject: (tasks, action) => {
-      const index = tasks.list.findIndex(
-        task => task.id === action.payload.taskId
-      )
-      tasks.list[index].projectId = action.payload.projectId
+      const { id: taskId, projectId } = action.payload
+      const index = tasks.list.findIndex(task => task.id === taskId)
+      tasks.list[index].projectId = projectId
     },
   },
 })
@@ -80,6 +79,14 @@ export const completeTask = id =>
     method: 'patch',
     date: { completed: true },
     onSuccess: taskCompleted.type,
+  })
+
+export const assignTaskToProject = (taskId, projectId) =>
+  apiRequest({
+    url: url + '/' + taskId,
+    method: 'patch',
+    data: { projectId },
+    onSuccess: taskAssignedToProject.type,
   })
 
 export const {

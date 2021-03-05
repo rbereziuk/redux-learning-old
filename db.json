@@ -3,7 +3,8 @@
     {
       "id": 1,
       "description": "Clean the room",
-      "completed": false
+      "completed": false,
+      "projectId": 1
     },
     {
       "id": 2,
