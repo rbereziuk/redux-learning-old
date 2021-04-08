@@ -5,6 +5,7 @@ import { toast } from './middleware/toast'
 import { api } from './middleware/api'
 
 export default function () {
+  // middleware functions have been invoked one by one
   return configureStore({
     reducer,
     middleware: [
