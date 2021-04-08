@@ -105,7 +105,7 @@ export default slice.reducer
 // If input don't change return previous output
 export const getUncompletedTasks = createSelector(
   state => state.entities.tasks,
-  tasks => tasks.filter(task => !task.completed)
+  tasks => tasks.list.filter(task => !task.completed)
 )
 
 export const getTasksByProject = projectId =>

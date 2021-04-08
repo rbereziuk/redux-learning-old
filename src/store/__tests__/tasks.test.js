@@ -1,16 +1,60 @@
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import configureStore from '../configureStore'
-import { addTask } from '../tasks'
+import { addTask, getUncompletedTasks } from '../tasks'
 
 describe('tasksSlice', () => {
-  test('shoud handle the addTask action', async () => {
-    const task = { description: 'a' }
+  let fakeAxios
+  let store
+  let task
+
+  beforeEach(() => {
+    store = configureStore()
+    fakeAxios = new MockAdapter(axios)
+
+    task = { description: 'a' }
+  })
+
+  const tasksSlice = () => store.getState().entities.tasks
+
+  test("should add the task to the store if it's saved to the server", async () => {
+    // Arrange
     const savedTask = { ...task, id: 1 }
-    const fakeAxios = new MockAdapter(axios)
     fakeAxios.onPost('/tasks').reply(200, savedTask)
-    const store = configureStore()
+
+    // Act
     await store.dispatch(addTask(task))
-    expect(store.getState().entities.tasks.list).toContainEqual(savedTask)
+
+    // Assert
+    expect(tasksSlice().list).toContainEqual(savedTask)
+  })
+
+  test("should add the task to the store if it's not saved to the server", async () => {
+    // Arrange
+    const savedTask = { ...task, id: 1 }
+    fakeAxios.onPost('/tasks').reply(500, savedTask)
+
+    // Act
+    await store.dispatch(addTask(task))
+
+    // Assert
+    expect(tasksSlice().list).toHaveLength(0)
+  })
+
+  describe('selectors', () => {
+    test('getUncompletedTasks', () => {
+      const result = getUncompletedTasks({
+        entities: {
+          tasks: {
+            list: [
+              { id: 1, comleted: false },
+              { id: 2, completed: true },
+            ],
+          },
+        },
+      })
+
+      expect(result).toHaveLength(1)
+    })
   })
 })
