@@ -15,6 +15,14 @@ describe('tasksSlice', () => {
     task = { description: 'a' }
   })
 
+  const createState = () => ({
+    entities: {
+      tasks: {
+        list: [],
+      },
+    },
+  })
+
   const tasksSlice = () => store.getState().entities.tasks
 
   test("should add the task to the store if it's saved to the server", async () => {
@@ -43,16 +51,13 @@ describe('tasksSlice', () => {
 
   describe('selectors', () => {
     test('getUncompletedTasks', () => {
-      const result = getUncompletedTasks({
-        entities: {
-          tasks: {
-            list: [
-              { id: 1, comleted: false },
-              { id: 2, completed: true },
-            ],
-          },
-        },
-      })
+      const state = createState()
+      state.entities.tasks.list = [
+        { id: 1, comleted: false },
+        { id: 2, completed: true },
+      ]
+
+      const result = getUncompletedTasks(state)
 
       expect(result).toHaveLength(1)
     })
