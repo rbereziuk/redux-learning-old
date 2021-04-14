@@ -1,7 +1,7 @@
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import configureStore from '../configureStore'
-import { addTask, completeTask, getUncompletedTasks } from '../tasks'
+import { addTask, completeTask, getUncompletedTasks, loadTasks } from '../tasks'
 
 describe('tasksSlice', () => {
   let fakeAxios
@@ -68,6 +68,54 @@ describe('tasksSlice', () => {
     await store.dispatch(completeTask(1))
 
     expect(tasksSlice().list[0].completed).not.toBeTruthy()
+  })
+
+  describe('loading tasks', () => {
+    describe('if the tasks exist in the cache', () => {
+      test('they should not be fetched from the server again', async () => {
+        fakeAxios.onGet('/tasks').reply(200, [{ id: 1 }])
+
+        await store.dispatch(loadTasks())
+        await store.dispatch(loadTasks())
+
+        expect(fakeAxios.history.get.length).toBe(1)
+      })
+    })
+    describe('if the tasks don"t exist in the cache', () => {
+      test('they should be fetched from the server and put in the store', async () => {
+        fakeAxios.onGet('/tasks').reply(200, [{ id: 1 }])
+
+        await store.dispatch(loadTasks())
+
+        expect(tasksSlice().list).toHaveLength(1)
+      })
+
+      describe('loading indicator', () => {
+        test('should be true while fetching tasks', () => {
+          fakeAxios.onGet('/tasks').reply(() => {
+            expect(tasksSlice().isLoading).toBe(true)
+            return [200, [{ id: 1 }]]
+          })
+          store.dispatch(loadTasks())
+        })
+
+        test('should be false if tasks are fetched', async () => {
+          fakeAxios.onGet('/tasks').reply(200, [{ id: 1 }])
+
+          await store.dispatch(loadTasks())
+
+          expect(tasksSlice().isLoading).toBe(false)
+        })
+
+        test('should be false if the server returns an arror', async () => {
+          fakeAxios.onGet('/tasks').reply(500)
+
+          await store.dispatch(loadTasks())
+
+          expect(tasksSlice().isLoading).toBe(false)
+        })
+      })
+    })
   })
 
   describe('selectors', () => {

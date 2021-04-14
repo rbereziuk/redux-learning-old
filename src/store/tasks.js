@@ -63,7 +63,7 @@ export const loadTasks = () => (dispatch, getState) => {
 
   if (diff < 1) return
 
-  dispatch(
+  return dispatch(
     apiRequest({
       url,
       onStart: tasksLoading.type,
