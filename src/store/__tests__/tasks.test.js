@@ -1,7 +1,7 @@
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import configureStore from '../configureStore'
-import { addTask, getUncompletedTasks } from '../tasks'
+import { addTask, completeTask, getUncompletedTasks } from '../tasks'
 
 describe('tasksSlice', () => {
   let fakeAxios
@@ -47,6 +47,27 @@ describe('tasksSlice', () => {
 
     // Assert
     expect(tasksSlice().list).toHaveLength(0)
+  })
+
+  test("should mark the task as completed if it's saved to the server", async () => {
+    const patchedTask = { ...task, completed: true }
+    fakeAxios.onPost('/tasks').reply(200, task)
+    fakeAxios.onPatch('/tasks/1').reply(200, patchedTask)
+
+    await store.dispatch(addTask(task))
+    await store.dispatch(completeTask(1))
+
+    expect(tasksSlice().list[0].completed).toBeTruthy()
+  })
+
+  test("should not mark the task as completed if it's not saved to the server", async () => {
+    fakeAxios.onPost('/tasks').reply(200, task)
+    fakeAxios.onPatch('/tasks/1').reply(500)
+
+    await store.dispatch(addTask(task))
+    await store.dispatch(completeTask(1))
+
+    expect(tasksSlice().list[0].completed).not.toBeTruthy()
   })
 
   describe('selectors', () => {
