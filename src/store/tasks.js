@@ -77,7 +77,7 @@ export const completeTask = id =>
   apiRequest({
     url: url + '/' + id,
     method: 'patch',
-    date: { completed: true },
+    data: { completed: true },
     onSuccess: taskCompleted.type,
   })
 
