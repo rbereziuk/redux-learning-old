@@ -1,7 +1,13 @@
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import configureStore from '../configureStore'
-import { addTask, completeTask, getUncompletedTasks, loadTasks } from '../tasks'
+import {
+  addTask,
+  assignTaskToProject,
+  completeTask,
+  getUncompletedTasks,
+  loadTasks,
+} from '../tasks'
 
 describe('tasksSlice', () => {
   let fakeAxios
@@ -20,6 +26,7 @@ describe('tasksSlice', () => {
       tasks: {
         list: [],
       },
+      projects: [],
     },
   })
 
@@ -116,6 +123,16 @@ describe('tasksSlice', () => {
         })
       })
     })
+  })
+
+  test('should assign the task to the project by giving ids', async () => {
+    fakeAxios.onPost('/tasks').reply(200, { id: 1 })
+    fakeAxios.onPatch('/tasks/1').reply(200, { id: 1, projectId: 2 })
+
+    await store.dispatch(addTask({ id: 1 }))
+    await store.dispatch(assignTaskToProject(1, 1))
+
+    expect(tasksSlice().list).toContainEqual({ id: 1, projectId: 2 })
   })
 
   describe('selectors', () => {
